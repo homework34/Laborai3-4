@@ -12,6 +12,8 @@ namespace Laborai3_4
     {
         static void Main(string[] args)
         {
+            // trečiam release viskas kaip ir padaryta, try catch tikrinimai, klases atskiruose failuose,
+            // bet forgood measures ikeliu atskira brancha.
             bool exit = false;
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
             while (!exit)
