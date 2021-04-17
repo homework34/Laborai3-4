@@ -26,6 +26,28 @@ namespace Laborai3_4
             this.ExamGrade = exam;
         }
 
+        public FinalGradeWithList(string line)
+        {
+            string[] studentInfo;
+            int exam;
+            line.Trim();
+            Int32.TryParse(line.Substring(line.LastIndexOf(' ') + 1), out exam);
+            line = line.Substring(0, line.LastIndexOf(' ') - 1);
+            studentInfo = line.Split(' ');
+
+            this.name = studentInfo[0];
+            this.lastName = studentInfo[1];
+            this.homeworkGrades = new List<int>();
+            for(int i=2; i< studentInfo.Length; i++)
+            {
+                int hwGrade;
+                Int32.TryParse(studentInfo[i], out hwGrade);
+                this.homeworkGrades.Add(hwGrade);
+            }
+
+            this.examGrade = exam;
+
+        }
         public string Name { get => name; set => name = value; }
         public string LastName { get => lastName; set => lastName = value; }
         public List<int> HomeworkGrades { get => homeworkGrades; set => homeworkGrades = value; }

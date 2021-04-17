@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,11 @@ namespace Laborai3_4
             while (!exit)
             {
                 int choice;
-                Console.WriteLine("1. Įvesti mokinių rezultatus \n2. Atvaizduoti mokinių rezultatus.\n3. Išeiti.");
+                Console.WriteLine(
+                    "1. Įvesti mokinių rezultatus \n" +
+                    "2. Pasiimti mokiniu pazymius is failo\n" +
+                    "3. Atvaizduoti mokinių rezultatus.\n" +
+                    "4. Išeiti.");
                 Int32.TryParse(Console.ReadLine(), out choice);
 
                 switch (choice)
@@ -25,9 +30,12 @@ namespace Laborai3_4
                         grades.AddRange(enterGrades());
                         break;
                     case 2:
-                        print(grades);
+                        grades.AddRange(getGradesFromFile());
                         break;
                     case 3:
+                        print(grades);
+                        break;
+                    case 4:
                         exit = true;
                         break;
                     default:
@@ -88,7 +96,7 @@ namespace Laborai3_4
                 homeworkGrades.Add(int.Parse(grade));
             }
             return new FinalGradeWithList(name, lastName, homeworkGrades, exam);
-            
+
         }
 
         public static FinalGradeWithList generateGrades()
@@ -103,7 +111,7 @@ namespace Laborai3_4
             lastName = Console.ReadLine();
 
             Random random = new Random();
-            for(int i = 0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 homeworkGrades.Add(random.Next(1, 10));
             }
@@ -113,37 +121,43 @@ namespace Laborai3_4
 
         public static void print(List<FinalGradeWithList> grades)
         {
-            Console.WriteLine("1. Vidurki\n2. Mediana");
-            int choice = int.Parse(Console.ReadLine());
-            bool average = choice == 1 ? true : false;
-            if(average)
-            {
-                printGradesAvg(grades);
-            } 
-            else
-            {
-                printGradesMedian(grades);
-            }
-        }
 
-        public static void printGradesAvg(List<FinalGradeWithList> grades)
-        {
-            Console.WriteLine("{0,-20} {1,-20} {2,-60}", "Pavarde", "Vardas", "Galutinis(Vid.)");
-            Console.WriteLine("_________________________________________________________________");
+            grades.Sort((x, y) => x.LastName.CompareTo(y.LastName));
+            Console.WriteLine();
+            Console.WriteLine("{0,-15} {1,-30} {2,-15} {3,-15}", "Pavarde", "Vardas", "Galutinis(Vid.)", "Galutinis(Med.)");
+            Console.WriteLine("__________________________________________________________________________________________");
             foreach (FinalGradeWithList grade in grades)
             {
-                Console.WriteLine("{0,-20} {1,-20} {2,-60:N2}", grade.LastName, grade.Name, grade.getFinalGradeWithAverage());
+                Console.WriteLine("{0,-15} {1,-30} {2,-15:N2} {3,-15:N2}", grade.LastName, grade.Name,
+                    grade.getFinalGradeWithAverage(), grade.getFinalGradeWithMedian());
             }
+            Console.WriteLine();
         }
 
-        public static void printGradesMedian(List<FinalGradeWithList> grades)
+        public static List<FinalGradeWithList> getGradesFromFile()
         {
-            Console.WriteLine("{0,-20} {1,-20} {2,-60}", "Pavarde", "Vardas", "Galutinis(Med.)");
-            Console.WriteLine("_________________________________________________________________");
-            foreach (FinalGradeWithList grade in grades)
+            List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+            try
             {
-                Console.WriteLine("{0,-20} {1,-20} {2,-60:N2}", grade.LastName, grade.Name, grade.getFinalGradeWithMedian());
+                const string Path = "students.txt";
+                using (StreamReader sr = new StreamReader(Path))
+                {
+
+                    string line;
+
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        grades.Add(new FinalGradeWithList(line));
+                    }
+                    sr.Close();
+                    Console.WriteLine("Import complete \n");
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("sad, {0}", e.Message);
+            }
+            return grades;
         }
 
     }

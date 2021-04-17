@@ -1,0 +1,6 @@
+aldona aldona 5 8 9 6 7 9
+uzdek man 7 8 5 3 6 5
+kapisona ir 8 7 4 5 2 3
+eisim pas 8 7 4 6 5 8
+klebona ir 8 5 6 9 8 7
+busi manoZmona 5 8 7 4 5 6
