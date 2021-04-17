@@ -146,9 +146,5 @@ namespace Laborai3_4
             }
         }
 
-        public static void generateRandomGrades()
-        {
-
-        }
     }
 }

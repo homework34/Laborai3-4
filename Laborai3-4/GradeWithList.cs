@@ -24,15 +24,6 @@ namespace Laborai3_4
             this.LastName = lastName;
             this.HomeworkGrades = homework;
             this.ExamGrade = exam;
-            //Final_points = 0.3 * average_of_hw + 0.7 * egzam
-            //if (average)
-            //{
-            //    this.FinalGrade = (double)(0.3d * homework.Average()) + (0.7d * exam);
-            //}
-            //else
-            //{
-            //    this.FinalGrade = (double)(0.3d * getMedian(homework)) + (0.7d * exam);
-            //}
         }
 
         public string Name { get => name; set => name = value; }

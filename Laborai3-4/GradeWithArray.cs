@@ -30,36 +30,7 @@ namespace Laborai3_4
             this.LastName = lastName;
             this.HomeworkGrades = homework;
             this.ExamGrade = exam;
-            //Final_points = 0.3 * average_of_hw + 0.7 * egzam
-            //if (average)
-            //{
-            //    this.FinalGrade = (double)(0.3d * getAverage(homework)) + (0.7d * exam);
-            //}
-            //else
-            //{
-            //    this.FinalGrade = (double)(0.3d * getMedian(homework)) + (0.7d * exam);
-            //}
         }
-
-        private int getSum(int[] homework)
-        {
-            int sum = 0;
-            foreach (int grade in homework)
-            {
-                sum += grade;
-            }
-            return sum;
-        }
-
-        //private double getAverage(int[] homework)
-        //{
-        //    if(homework.Length > 0)
-        //    {
-        //    return (double)getSum(homework) / homework.Length;
-        //    }
-        //    throw new Exception("homework values null.");
-        //}
-
         private double getMedian()
         {
             if (this.homeworkGrades.Length == 0)
