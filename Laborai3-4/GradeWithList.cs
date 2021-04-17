@@ -72,13 +72,28 @@ namespace Laborai3_4
 
         public double getFinalGradeWithAverage()
         {
-            double a = (double)(0.3d * this.homeworkGrades.Average()) + (0.7d * this.ExamGrade);
-            return a;
+            return (double)(0.3d * this.homeworkGrades.Average()) + (0.7d * this.ExamGrade);
         }
 
         public double getFinalGradeWithMedian()
         {
            return (double)(0.3d * getMedian()) + (0.7d * this.ExamGrade);
+        }
+
+        override
+        public string ToString()
+        {
+            return this.name + " " + this.lastName + " " + gradesToString() + this.examGrade;
+        }
+
+        private string gradesToString()
+        {
+            string grades= "";
+            foreach(int grade in this.homeworkGrades)
+            {
+                grades += grade.ToString() + " ";
+            }
+            return grades;
         }
     }
 }

@@ -12,10 +12,9 @@ namespace Laborai3_4
     {
         static void Main(string[] args)
         {
-            // trečiam release viskas kaip ir padaryta, try catch tikrinimai, klases atskiruose failuose,
-            // bet forgood measures ikeliu atskira brancha.
             bool exit = false;
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+
             while (!exit)
             {
                 int choice;
@@ -23,7 +22,8 @@ namespace Laborai3_4
                     "1. Įvesti mokinių rezultatus \n" +
                     "2. Pasiimti mokiniu pazymius is failo\n" +
                     "3. Atvaizduoti mokinių rezultatus.\n" +
-                    "4. Išeiti.");
+                    "4. Filtruoti studentus pagal balus\n" +
+                    "5. Išeiti.");
                 Int32.TryParse(Console.ReadLine(), out choice);
 
                 switch (choice)
@@ -38,6 +38,9 @@ namespace Laborai3_4
                         print(grades);
                         break;
                     case 4:
+                        filterByGrades(grades);
+                        break;
+                    case 5:
                         exit = true;
                         break;
                     default:
@@ -52,6 +55,7 @@ namespace Laborai3_4
             bool exit = false;
             int choice;
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+
             while (!exit)
             {
                 Console.WriteLine("1. Įvesti studento pažymius \n2. Sugeneruoti pazymius studentui\n3. Išeiti.");
@@ -59,10 +63,16 @@ namespace Laborai3_4
                 switch (choice)
                 {
                     case 1:
+                        try
+                        {
                         grades.Add(gradeInput());
+                        } catch(Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
                         break;
                     case 2:
-                        grades.Add(generateGrades());
+                        grades.AddRange(generate());
                         break;
                     case 3:
                         exit = true;
@@ -73,6 +83,38 @@ namespace Laborai3_4
                 }
             }
 
+            return grades;
+        }
+
+        public static List<FinalGradeWithList> generate()
+        {
+            Random random = new Random();
+            int choice;
+            List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+            Console.WriteLine(
+                "1. Generuoti 10k studentų\n" +
+                "2. Generuoti 100k studentų\n" +
+                "3. Generuoti 1kk studentų\n" +
+                "4. Generuoti 10kk studentų\n" +
+                "5. Išeiti");
+            Int32.TryParse(Console.ReadLine(), out choice);
+            switch (choice)
+            {
+                case 1:
+                    grades.AddRange(generateGrades(10000, "students1.txt", random));
+                    break;
+                case 2:
+                    grades.AddRange(generateGrades(100000, "students2.txt", random));
+                    break;
+                case 3:
+                    grades.AddRange(generateGrades(1000000, "students3.txt", random));
+                    break;
+                case 4:
+                    grades.AddRange(generateGrades(10000000, "students4.txt", random));
+                    break;
+                case 5:
+                    break;
+            }
             return grades;
         }
 
@@ -93,32 +135,69 @@ namespace Laborai3_4
             Int32.TryParse(Console.ReadLine(), out exam);
 
             string[] gradeArray = homework.Split(' ');
-            foreach (string grade in gradeArray)
+            if (gradeArray.Length > 1)
             {
-                homeworkGrades.Add(int.Parse(grade));
+                foreach (string grade in gradeArray)
+                {
+                    int parsedGrade;
+                    Int32.TryParse(grade, out parsedGrade);
+                    if (parsedGrade == 0)
+                    {
+                        throw new Exception("Ivesti netinkami pazymiai, bandykite dar karta :)");
+                    }
+                    homeworkGrades.Add(parsedGrade);
+                }
+            }
+            if(homeworkGrades == null || homeworkGrades.Count == 0 || exam == 0)
+            {
+                throw new Exception("Ivesti netinkami pazymiai, bandykite dar karta :)");
             }
             return new FinalGradeWithList(name, lastName, homeworkGrades, exam);
 
         }
 
-        public static FinalGradeWithList generateGrades()
+        public static List<FinalGradeWithList> generateGrades(int numberOfStudents, string fileName, Random random)
         {
-            string name;
-            string lastName;
-            List<int> homeworkGrades = new List<int>();
-            int exam;
-            Console.WriteLine("Mokinio vardas:");
-            name = Console.ReadLine();
-            Console.WriteLine("Mokinio pavarde:");
-            lastName = Console.ReadLine();
-
-            Random random = new Random();
-            for (int i = 0; i < 5; i++)
+            List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+            for (int i = 0; i < numberOfStudents; i++)
             {
-                homeworkGrades.Add(random.Next(1, 10));
+
+                string name = "Name" + i.ToString();
+                string lastName = "Last name" + i.ToString();
+                List<int> homeworkGrades = new List<int>();
+                int exam;
+
+                for (int j = 0; j < 5; j++)
+                {
+                    homeworkGrades.Add(random.Next(1, 10));
+                }
+                exam = random.Next(1, 10);
+                grades.Add(new FinalGradeWithList(name, lastName, homeworkGrades, exam));
             }
-            exam = random.Next(1, 10);
-            return new FinalGradeWithList(name, lastName, homeworkGrades, exam);
+            Console.WriteLine("Sugeneruota {0} studentų", numberOfStudents);
+            saveToFile(grades, fileName);
+            return grades;
+        }
+
+        public static void saveToFile(List<FinalGradeWithList> grades, string fileName)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    foreach (FinalGradeWithList a in grades)
+                    {
+                        writer.WriteLine(a.ToString());
+                    }
+                    Console.WriteLine("Studentai išsaugoti faile: {0}", fileName);
+                    writer.Close();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("sad write,{0}", e.Message);
+            }
         }
 
         public static void print(List<FinalGradeWithList> grades)
@@ -162,5 +241,25 @@ namespace Laborai3_4
             return grades;
         }
 
+        public static void filterByGrades(List<FinalGradeWithList> grades)
+        {
+            List<FinalGradeWithList> passed = new List<FinalGradeWithList>();
+            List<FinalGradeWithList> failed = new List<FinalGradeWithList>();
+            foreach (FinalGradeWithList grade in grades)
+            {
+                if (grade.getFinalGradeWithAverage() >= 5.0d)
+                {
+                    passed.Add(grade);
+                }
+                else
+                {
+                    failed.Add(grade);
+                }
+            }
+            Console.WriteLine("Išlaikė: {0}, neišlaikė: {1}", passed.Count, failed.Count);
+            saveToFile(passed, "Passed.txt");
+            saveToFile(failed, "Failed.txt");
+
+        }
     }
 }
