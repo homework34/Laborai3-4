@@ -240,7 +240,7 @@ namespace Laborai3_4
             stopwatch.Start();
             try
             {
-                const string Path = "students.txt";
+                const string Path = "students3.txt";
                 using (StreamReader sr = new StreamReader(Path))
                 {
 
@@ -269,10 +269,13 @@ namespace Laborai3_4
         public static void filterByGrades(List<FinalGradeWithList> grades)
         {
             Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch stopwatch2 = new Stopwatch();
+            List<FinalGradeWithList> listToFilter = new List<FinalGradeWithList>(grades);
+           
             List<FinalGradeWithList> passed = new List<FinalGradeWithList>();
             List<FinalGradeWithList> failed = new List<FinalGradeWithList>();
-            foreach (FinalGradeWithList grade in grades)
+            stopwatch.Start();
+            foreach (FinalGradeWithList grade in listToFilter)
             {
                 if (grade.getFinalGradeWithAverage() >= 5.0d)
                 {
@@ -285,10 +288,30 @@ namespace Laborai3_4
             }
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
-            Console.WriteLine("Isskaidymas i 2 sarasus uztruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            Console.WriteLine("Isskaidymas i 2 sarasus 1 strategija uztruko: {0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
             Console.WriteLine("Išlaikė: {0}, neišlaikė: {1}", passed.Count, failed.Count);
+
+            List<FinalGradeWithList> failed2 = new List<FinalGradeWithList>();
+            stopwatch2.Start();
+            for (int i = listToFilter.Count -1; i >=0; i--)
+            {
+                
+                if (listToFilter[i].getFinalGradeWithAverage() < 5.0d)
+                {
+                    failed2.Add(listToFilter[i]);
+                    listToFilter.RemoveAt(i);
+                    
+                }
+                
+            }
+            stopwatch2.Stop();
+            TimeSpan ts2 = stopwatch2.Elapsed;
+            Console.WriteLine("Isskaidymas i 2 sarasus 2 strategija uztruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            ts2.Hours, ts2.Minutes, ts2.Seconds,
+            ts2.Milliseconds / 10);
+            Console.WriteLine("Išlaikė: {0}, neišlaikė: {1}", listToFilter.Count, failed2.Count);
             saveToFile(passed, "Passed.txt");
             saveToFile(failed, "Failed.txt");
 
