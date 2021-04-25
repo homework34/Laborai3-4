@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -158,12 +159,14 @@ namespace Laborai3_4
 
         public static List<FinalGradeWithList> generateGrades(int numberOfStudents, string fileName, Random random)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
             for (int i = 0; i < numberOfStudents; i++)
             {
 
                 string name = "Name" + i.ToString();
-                string lastName = "Last name" + i.ToString();
+                string lastName = "Lastname" + i.ToString();
                 List<int> homeworkGrades = new List<int>();
                 int exam;
 
@@ -174,13 +177,20 @@ namespace Laborai3_4
                 exam = random.Next(1, 10);
                 grades.Add(new FinalGradeWithList(name, lastName, homeworkGrades, exam));
             }
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
             Console.WriteLine("Sugeneruota {0} studentų", numberOfStudents);
+            Console.WriteLine("Užtruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
             saveToFile(grades, fileName);
             return grades;
         }
 
         public static void saveToFile(List<FinalGradeWithList> grades, string fileName)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             try
             {
                 using (StreamWriter writer = new StreamWriter(fileName))
@@ -198,6 +208,11 @@ namespace Laborai3_4
             {
                 Console.WriteLine("sad write,{0}", e.Message);
             }
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            Console.WriteLine("Saugojimas užtruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
         }
 
         public static void print(List<FinalGradeWithList> grades)
@@ -243,6 +258,8 @@ namespace Laborai3_4
 
         public static void filterByGrades(List<FinalGradeWithList> grades)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             List<FinalGradeWithList> passed = new List<FinalGradeWithList>();
             List<FinalGradeWithList> failed = new List<FinalGradeWithList>();
             foreach (FinalGradeWithList grade in grades)
@@ -256,6 +273,11 @@ namespace Laborai3_4
                     failed.Add(grade);
                 }
             }
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            Console.WriteLine("Isskaidymas i 2 sarasus uztruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
             Console.WriteLine("Išlaikė: {0}, neišlaikė: {1}", passed.Count, failed.Count);
             saveToFile(passed, "Passed.txt");
             saveToFile(failed, "Failed.txt");
