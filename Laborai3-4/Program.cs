@@ -15,7 +15,8 @@ namespace Laborai3_4
         {
             bool exit = false;
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
-
+            //LinkedList<FinalGradeWithList> grades = new LinkedList<FinalGradeWithList>();
+            //Queue<FinalGradeWithList> grades = new Queue<FinalGradeWithList>();
             while (!exit)
             {
                 int choice;
@@ -56,7 +57,7 @@ namespace Laborai3_4
             bool exit = false;
             int choice;
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
-
+            
             while (!exit)
             {
                 Console.WriteLine("1. Įvesti studento pažymius \n2. Sugeneruoti pazymius studentui\n3. Išeiti.");
@@ -233,6 +234,10 @@ namespace Laborai3_4
         public static List<FinalGradeWithList> getGradesFromFile()
         {
             List<FinalGradeWithList> grades = new List<FinalGradeWithList>();
+            Stopwatch stopwatch = new Stopwatch();
+            //LinkedList<FinalGradeWithList> grades = new LinkedList<FinalGradeWithList>();
+            //Queue<FinalGradeWithList> grades = new Queue<FinalGradeWithList>();
+            stopwatch.Start();
             try
             {
                 const string Path = "students.txt";
@@ -253,6 +258,11 @@ namespace Laborai3_4
             {
                 Console.WriteLine("sad, {0}", e.Message);
             }
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            Console.WriteLine("Paemimas is failo uztruko: {0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
             return grades;
         }
 
